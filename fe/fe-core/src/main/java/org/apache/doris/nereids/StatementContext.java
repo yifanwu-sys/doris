@@ -136,6 +136,7 @@ public class StatementContext implements Closeable {
 
     private boolean isDpHyp = false;
 
+    private boolean isDelete = false;
     private boolean hasNondeterministic = false;
 
     // hasUnknownColStats true if any column stats in the tables used by this sql is
@@ -302,8 +303,6 @@ public class StatementContext implements Closeable {
     private final Set<List<String>> materializationRewrittenSuccessSet = new HashSet<>();
 
     private boolean isInsert = false;
-    private boolean skipPrunePredicate = false;
-
     private Optional<Map<TableIf, Set<Expression>>> mvRefreshPredicates = Optional.empty();
 
     // For Iceberg rewrite operations: store file scan tasks to be used by
@@ -1178,14 +1177,6 @@ public class StatementContext implements Closeable {
         return this.useGatherForIcebergRewrite;
     }
 
-    public boolean isSkipPrunePredicate() {
-        return skipPrunePredicate;
-    }
-
-    public void setSkipPrunePredicate(boolean skipPrunePredicate) {
-        this.skipPrunePredicate = skipPrunePredicate;
-    }
-
     public boolean hasNestedColumns() {
         return hasNestedColumns;
     }
@@ -1214,5 +1205,13 @@ public class StatementContext implements Closeable {
             return 0;
         }
         return lowerCaseDatabaseNamesCache.computeIfAbsent(catalogName, Env::getLowerCaseDatabaseNames);
+    }
+
+    public boolean isDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(boolean del) {
+        isDelete = del;
     }
 }
